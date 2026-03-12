@@ -1,7 +1,7 @@
 (async () => {
   const CONFIG = {
     DRY_RUN: false,            // Для теста ставим "true", боевой режим "false" (For testing, set to "true"; for production mode, "false")
-    MAX_DELETE: 500,
+    MAX_DELETE: 500,           // Здесь указываем количество постов которое надо удалить, по умолчанию 500 (Here you specify the number of posts to delete; the default is 500)
     OPEN_MENU_DELAY: 800,
     OPEN_DIALOG_DELAY: 900,
     AFTER_DELETE_DELAY: 2200,
