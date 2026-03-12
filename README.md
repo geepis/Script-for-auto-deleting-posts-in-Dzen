@@ -1,114 +1,26 @@
-# Script for auto-deleting posts in Dzen
-# Скрипт авто удаленя постов в ДЗЕН
+RU_ru
+Скрипт авто удаленя постов в ДЗЕН
 
-# Скрипт автоматически удаляет посты в дзен
-# Запускается скрипт в консоле браузера на странице https://dzen.ru/profile/editor/ВАШ_ЛОГИН/publications
-# в страке const "limit = 200;" указываем кличество сколько строк надо удалить
+Скрипт автоматически удаляет посты в дзен
+В страке "const limit = 20;" указываем кличество сколько постов надо удалить
+Запускается скрипт в консоле браузера на странице https://dzen.ru/profile/editor/ВАШ_ЛОГИН/publications
+Заходим на указанную старницу, жмем "F12" выбираем вкладку "Консоль"
 
-# Вставляем скрипт в консоль, нажимаем ENTER, пьем чай, скрипт работает... Удачи
+Вставляем скрипт в "консоль", нажимаем ENTER, пьем чай, скрипт работает... Удачи
 
-(async () => {
-  const wait = ms => new Promise(r => setTimeout(r, ms));
 
-  function visible(el) {
-    return !!el && el.offsetParent !== null;
-  }
+EN_en
+Script for Automatically Deleting Posts in Dzen
 
-  function fire(el) {
-    if (!el) return false;
-    const rect = el.getBoundingClientRect();
-    const opts = {
-      bubbles: true,
-      cancelable: true,
-      view: window,
-      clientX: rect.left + rect.width / 2,
-      clientY: rect.top + rect.height / 2
-    };
-    ['pointerdown', 'mousedown', 'pointerup', 'mouseup', 'click'].forEach(type => {
-      el.dispatchEvent(new MouseEvent(type, opts));
-    });
-    return true;
-  }
+This script automatically deletes posts in Dzen.
 
-  function findMenuButton() {
-    const buttons = [...document.querySelectorAll('button')].filter(visible);
+In the line const limit = 20;, specify how many posts you want to delete.
 
-    const exact = buttons.find(b =>
-      /действ|ещ[её]|more|меню/i.test(
-        (b.getAttribute('aria-label') || '') + ' ' + (b.textContent || '')
-      )
-    );
-    if (exact) return exact;
+Run the script in the browser console on the page:
+https://dzen.ru/profile/editor/YOUR_LOGIN/publications
 
-    const byClass = buttons.find(b =>
-      /dropdown|action|menu|more/i.test(b.className || '')
-    );
-    if (byClass) return byClass;
+Open the specified page, press F12, and select the Console tab.
 
-    const iconOnly = buttons.find(b => {
-      const txt = (b.textContent || '').trim();
-      const aria = (b.getAttribute('aria-label') || '').trim();
-      const hasSvg = !!b.querySelector('svg,use');
-      return hasSvg && !txt && !/Удалить|Отмена/.test(txt + ' ' + aria);
-    });
-    if (iconOnly) return iconOnly;
+Paste the script into the console, press Enter, make yourself a cup of tea, and let the script do the work.
 
-    return null;
-  }
-
-  function findDeleteItem() {
-    return [...document.querySelectorAll('li.Menu-Item, [role="menuitem"], button, span, div')]
-      .find(el => visible(el) && el.textContent.trim() === 'Удалить');
-  }
-
-  function findConfirmBtn() {
-    return document.querySelector('button.editor--dialog__confirmButton-3I') ||
-      [...document.querySelectorAll('button')]
-        .find(b => visible(b) && b.textContent.trim() === 'Удалить' && b.closest('[role="dialog"], .Modal-Content'));
-  }
-
-  let count = 0;
-  const limit = 200;
-
-  while (count < limit) {
-    const menuBtn = findMenuButton();
-    console.log('menuBtn =', menuBtn);
-
-    if (!menuBtn) {
-      console.log('Стоп: кнопка меню поста не найдена');
-      break;
-    }
-
-    menuBtn.scrollIntoView({ block: 'center' });
-    await wait(500);
-    fire(menuBtn);
-    await wait(800);
-
-    const del = findDeleteItem();
-    console.log('deleteItem =', del);
-
-    if (!del) {
-      console.log('Стоп: пункт "Удалить" не найден');
-      break;
-    }
-
-    fire(del);
-    await wait(900);
-
-    const confirmBtn = findConfirmBtn();
-    console.log('confirmBtn =', confirmBtn);
-
-    if (!confirmBtn) {
-      console.log('Стоп: подтверждение не найдено');
-      break;
-    }
-
-    fire(confirmBtn);
-    count++;
-    console.log('Удалён пост №' + count);
-
-    await wait(2500);
-  }
-
-  console.log('Готово. Всего удалено:', count);
-})();
+Good luck! ☕
